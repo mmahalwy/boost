@@ -2,7 +2,6 @@
 
 import fs from 'fs';
 import type Module from 'module';
-import resolve from 'resolve';
 import { interopRequireModule } from '../internal/interopRequireModule';
 import { PortablePath } from '../types';
 
@@ -18,7 +17,7 @@ let ts: typeof import('typescript') | null = null;
 
 try {
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-	ts = require(resolve.sync('typescript'));
+	ts = require('typescript');
 } catch {
 	// Ignore and check at runtime
 }

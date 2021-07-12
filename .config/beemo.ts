@@ -1,5 +1,8 @@
 export default {
 	module: '@beemo/dev',
+	execute: {
+		output: 'stream',
+	},
 	drivers: [
 		'babel',
 		'eslint',
@@ -26,9 +29,4 @@ export default {
 		node: true,
 		react: true,
 	},
-	// typescript: {
-	//   compilerOptions: {
-	//     keyofStringsOnly: true,
-	//   },
-	// },
 };
