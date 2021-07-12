@@ -45,8 +45,9 @@ resolver.lookupNodeModule('tool-config-module/lib/configs/tool.js');
 
 Once all the lookup paths have been defined, the `PathResolver#resolve()` method will iterate
 through them in order until one is found. If a file system path, `fs.existsSync()` will be used to
-check for existence, while `require.resolve()` will be used for Node.js modules. If found, a result
-object will be returned with the resolved `Path` and original lookup parts.
+check for existence, while the [resolve](https://www.npmjs.com/package/resolve) package will be used
+for Node.js modules. If found, a result object will be returned with the resolved `Path` and
+original lookup parts.
 
 ```ts
 const { originalPath, resolvedPath, type } = resolver.resolve();
@@ -100,7 +101,7 @@ resolver.lookupNodeModule('module-name');
 
 Given a list of lookups, attempt to find the first real/existing path and return a resolved absolute
 path. If a file system path, will check using `fs.exists`. If a node module path, will check using
-`require.resolve`.
+[resolve](https://www.npmjs.com/package/resolve).
 
 ```ts
 const { originalPath, resolvedPath, type } = resolver.resolve();

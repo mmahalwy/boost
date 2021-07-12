@@ -1954,6 +1954,7 @@ __metadata:
     json5: ^2.2.0
     optimal: ^4.3.0
     pretty-ms: ^7.0.1
+    resolve: ^1.20.0
     yaml: ^1.10.2
   languageName: unknown
   linkType: soft
@@ -4495,6 +4496,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/resolve@npm:^1.20.1":
+  version: 1.20.1
+  resolution: "@types/resolve@npm:1.20.1"
+  checksum: ceb8d6567988de1c611c43113b0f22cf95d181caffc7e2dc2dff74eed053ff7665ef42db8f18852293d9eff685d378a9fb3be5bd7c37ad22aa3cc2f7dc12bb8c
+  languageName: node
+  linkType: hard
+
 "@types/responselike@npm:^1.0.0":
   version: 1.0.0
   resolution: "@types/responselike@npm:1.0.0"
@@ -5892,6 +5900,7 @@ __metadata:
     "@types/minimatch": ^3.0.4
     "@types/pluralize": ^0.0.29
     "@types/react": ^16.9.55
+    "@types/resolve": ^1.20.1
     "@types/semver": ^7.3.4
     "@types/split": ^1.0.0
     "@types/wrap-ansi": ^3.0.0

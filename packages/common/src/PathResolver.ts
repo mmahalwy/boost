@@ -1,3 +1,4 @@
+import resolve from 'resolve';
 import { CommonError } from './CommonError';
 import { Path } from './Path';
 import { Lookup, LookupType, ModuleResolver, PortablePath } from './types';
@@ -8,7 +9,7 @@ export class PathResolver {
 	private resolver: ModuleResolver;
 
 	constructor(resolver?: ModuleResolver) {
-		this.resolver = resolver ?? require.resolve;
+		this.resolver = resolver ?? resolve.sync;
 	}
 
 	/**
@@ -50,7 +51,7 @@ export class PathResolver {
 	/**
 	 * Given a list of lookups, attempt to find the first real/existing path and
 	 * return a resolved absolute path. If a file system path, will check using `fs.exists`.
-	 * If a node module path, will check using `require.resolve`.
+	 * If a node module path, will check using a resolver.
 	 */
 	resolve(): {
 		originalPath: Path;
@@ -61,7 +62,7 @@ export class PathResolver {
 		let resolvedLookup: Lookup | undefined;
 
 		this.lookups.some((lookup) => {
-			// Check that the file exists on the file system.
+			// Check that the file exists on the file system
 			if (lookup.type === LookupType.FILE_SYSTEM) {
 				if (lookup.path.exists()) {
 					resolvedPath = lookup.path;
@@ -70,8 +71,7 @@ export class PathResolver {
 					return false;
 				}
 
-				// Check that the module path exists using Node's module resolution.
-				// The `require.resolve` function will throw an error if not found.
+				// Check that the module path exists using Node's module resolution
 			} else if (lookup.type === LookupType.NODE_MODULE) {
 				try {
 					resolvedPath = this.resolver(lookup.path.path());
