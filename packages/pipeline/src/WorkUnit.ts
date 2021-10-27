@@ -33,25 +33,25 @@ export abstract class WorkUnit<Options extends object, Input = unknown, Output =
 	 * Called when an execution fails.
 	 * @category Events
 	 */
-	readonly onFail = new Event<[Error | null, Input]>('fail');
+	readonly onFail = new Event<[Error | null, Input, Context]>('fail');
 
 	/**
 	 * Called when an execution succeeds.
 	 * @category Events
 	 */
-	readonly onPass = new Event<[Output, Input]>('pass');
+	readonly onPass = new Event<[Output, Input, Context]>('pass');
 
 	/**
 	 * Called before a work unit is executed. Can return `true` to skip the work unit.
 	 * @category Events
 	 */
-	readonly onRun = new BailEvent<[Input]>('run');
+	readonly onRun = new BailEvent<[Input, Context]>('run');
 
 	/**
 	 * Called when an execution is skipped.
 	 * @category Events
 	 */
-	readonly onSkip = new Event<[Input]>('skip');
+	readonly onSkip = new Event<[Input, Context]>('skip');
 
 	readonly title: string;
 
@@ -132,12 +132,12 @@ export abstract class WorkUnit<Options extends object, Input = unknown, Output =
 	 */
 	async run(context: Context, value: Input): Promise<Output> {
 		this.input = value;
-		const skip = this.onRun.emit([value]);
+		const skip = this.onRun.emit([value, context]);
 		const runner: Action<Context, Input, Output> = this.action;
 
 		if (skip || this.isSkipped() || !runner) {
 			this.status = STATUS_SKIPPED;
-			this.onSkip.emit([value]);
+			this.onSkip.emit([value, context]);
 
 			// Allow input as output. This is problematic for skipping
 			// since the expected output is no longer in sync. Revisit.
@@ -152,13 +152,13 @@ export abstract class WorkUnit<Options extends object, Input = unknown, Output =
 			this.output = await runner(context, value, this);
 			this.status = STATUS_PASSED;
 			this.stopTime = Date.now();
-			this.onPass.emit([this.output, value]);
+			this.onPass.emit([this.output, value, context]);
 		} catch (error: unknown) {
 			this.status = STATUS_FAILED;
 			this.stopTime = Date.now();
 
 			if (error instanceof Error) {
-				this.onFail.emit([error, value]);
+				this.onFail.emit([error, value, context]);
 
 				throw error;
 			}

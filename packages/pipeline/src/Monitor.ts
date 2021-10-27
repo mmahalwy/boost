@@ -1,6 +1,7 @@
 /* eslint-disable promise/prefer-await-to-callbacks */
 
 import { BailEvent, Event } from '@boost/event';
+import { Context } from './Context';
 import { Routine } from './Routine';
 import { AnyPipeline, AnyWorkUnit } from './types';
 
@@ -27,25 +28,25 @@ export class Monitor {
 	 * Called when any work unit has failed.
 	 * @category Events
 	 */
-	readonly onWorkUnitFail = new Event<[AnyWorkUnit, Error | null, unknown]>('fail');
+	readonly onWorkUnitFail = new Event<[AnyWorkUnit, Error | null, unknown, Context]>('fail');
 
 	/**
 	 * Called when any work unit has passed.
 	 * @category Events
 	 */
-	readonly onWorkUnitPass = new Event<[AnyWorkUnit, unknown, unknown]>('pass');
+	readonly onWorkUnitPass = new Event<[AnyWorkUnit, unknown, unknown, Context]>('pass');
 
 	/**
 	 * Called when any work unit is ran.
 	 * @category Events
 	 */
-	readonly onWorkUnitRun = new BailEvent<[AnyWorkUnit, unknown]>('run');
+	readonly onWorkUnitRun = new BailEvent<[AnyWorkUnit, unknown, Context]>('run');
 
 	/**
 	 * Called when any work unit is skipped.
 	 * @category Events
 	 */
-	readonly onWorkUnitSkip = new Event<[AnyWorkUnit, unknown]>('skip');
+	readonly onWorkUnitSkip = new Event<[AnyWorkUnit, unknown, Context]>('skip');
 
 	/**
 	 * Monitor events for the provided pipeline, its work units, and all other
@@ -67,20 +68,20 @@ export class Monitor {
 
 			this.onPipelineRunWorkUnit.emit([pipeline, workUnit, value]);
 
-			workUnit.onFail.listen((error, input) => {
-				this.onWorkUnitFail.emit([workUnit, error, input]);
+			workUnit.onFail.listen((error, input, context) => {
+				this.onWorkUnitFail.emit([workUnit, error, input, context]);
 			});
 
-			workUnit.onPass.listen((output, input) => {
-				this.onWorkUnitPass.emit([workUnit, output, input]);
+			workUnit.onPass.listen((output, input, context) => {
+				this.onWorkUnitPass.emit([workUnit, output, input, context]);
 			});
 
-			workUnit.onRun.listen((input) => {
-				this.onWorkUnitRun.emit([workUnit, input]);
+			workUnit.onRun.listen((input, context) => {
+				this.onWorkUnitRun.emit([workUnit, input, context]);
 			});
 
-			workUnit.onSkip.listen((input) => {
-				this.onWorkUnitSkip.emit([workUnit, input]);
+			workUnit.onSkip.listen((input, context) => {
+				this.onWorkUnitSkip.emit([workUnit, input, context]);
 			});
 		});
 
